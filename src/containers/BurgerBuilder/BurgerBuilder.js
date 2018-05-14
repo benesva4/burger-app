@@ -27,7 +27,7 @@ class BurgerBuilder extends Component {
     componentDidMount() {
         axios.get("https://react-my-burger-183c9.firebaseio.com/ingredients.json")
             .then(response => this.setState({ ingredients: response.data }))
-            .catch(error => this.setState({error: true}))
+            .catch(error => this.setState({ error: true }))
     }
 
     updatePurchaseState(ingredients) {
@@ -71,27 +71,38 @@ class BurgerBuilder extends Component {
     purchaseCancelHandler = () => this.setState({ purchasing: false })
 
     purchaseContinueHandler = () => {
-        this.setState({ loading: true, })
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: "Venca Penca",
-                adress: {
-                    street: "Teststreet 12",
-                    zipCode: "444578",
-                    country: "Czech Republic",
-                },
-                deliveryMethod: "fast",
-            }
+        const queryParams = []
+        for (let i in this.state.ingredients) {
+            queryParams.push(`${encodeURIComponent(i)}=${encodeURIComponent(this.state.ingredients[i])}`)
         }
-        axios.post("/orders.json", order)
-            .then(response => {
-                this.setState({ loading: false, purchasing: false })
-            })
-            .catch(error => {
-                this.setState({ loading: false, purchasing: false })
-            })
+        const queryString = queryParams.join("&")
+        this.props.history.push({
+            pathname: "/checkout",
+            search: `?${queryString}`
+        })
+
+/*
+              this.setState({ loading: true, })
+              const order = {
+                  ingredients: this.state.ingredients,
+                  price: this.state.totalPrice,
+                  customer: {
+                      name: "Venca Penca",
+                      adress: {
+                          street: "Teststreet 12",
+                          zipCode: "444578",
+                          country: "Czech Republic",
+                      },
+                      deliveryMethod: "fast",
+                  }
+              }
+              axios.post("/orders.json", order)
+                  .then(response => {
+                      this.setState({ loading: false, purchasing: false })
+                  })
+                  .catch(error => {
+                      this.setState({ loading: false, purchasing: false })
+                  })*/
     }
 
     render() {

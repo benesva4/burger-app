@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classes from "./Modal.css"
-import Backdrop from "../BackDrop/BackDrop.js"
+import BackDrop from "../BackDrop/BackDrop.js"
 
 class Modal extends Component {
     shouldComponentUpdate(nextProps, nextState) {
@@ -16,7 +16,7 @@ class Modal extends Component {
         
         return (
             <React.Fragment>
-                <Backdrop show={show} clicked={modalClosed} />
+                <BackDrop show={show} clicked={modalClosed} />
                 <div className={classes.Modal}
                     style={{
                         transform: show ? "translateY(0)" : "translateY(-100vh)",
