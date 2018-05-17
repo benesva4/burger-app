@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classes from "./Modal.css"
-import BackDrop from "../BackDrop/BackDrop.js"
+import BackDrop from "../BackDrop/BackDrop"
 
 class Modal extends Component {
     shouldComponentUpdate(nextProps, nextState) {
