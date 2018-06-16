@@ -13,7 +13,6 @@ import * as actions from "../../store/actions"
 
 class BurgerBuilder extends Component {
     state = {
-        purchasable: false,
         purchasing: false,
         loading: false,
         error: false,
@@ -25,10 +24,10 @@ class BurgerBuilder extends Component {
             .catch(error => this.setState({ error: true }))
     }
 
-    updatePurchaseState(ingredients) {
-        const sum = Object.keys(ingredients)
-            .reduce((sum, el) => (sum + ingredients[el]), 0)
-        this.setState({ purchasable: sum > 0 })
+    updatePurchaseState = () => {
+        const sum = Object.keys(this.props.ingredients)
+            .reduce((sum, el) => (sum + this.props.ingredients[el]), 0)
+        return sum > 0
     }
 
     purchaseHandler = () => this.setState({ purchasing: true })
@@ -36,16 +35,7 @@ class BurgerBuilder extends Component {
     purchaseCancelHandler = () => this.setState({ purchasing: false })
 
     purchaseContinueHandler = () => {
-        const queryParams = []
-        for (let i in this.state.ingredients) {
-            queryParams.push(`${encodeURIComponent(i)}=${encodeURIComponent(this.state.ingredients[i])}`)
-        }
-        queryParams.push(`price=${this.state.totalPrice}`)
-        const queryString = queryParams.join("&")
-        this.props.history.push({
-            pathname: "/checkout",
-            search: `?${queryString}`
-        })
+        this.props.history.push("/checkout")
     }
 
     render() {
@@ -64,7 +54,7 @@ class BurgerBuilder extends Component {
                     <BuildControls
                         ingredientAdded={this.props.onIngredientAdded} ingredientRemoved={this.props.onIngredientRemoved}
                         disabled={disabledInfo}
-                        purchasable={this.state.purchasable}
+                        purchasable={this.updatePurchaseState()}
                         price={this.props.totalPrice}
                         ordered={this.purchaseHandler} />
                 </React.Fragment>
@@ -94,7 +84,7 @@ class BurgerBuilder extends Component {
     }
 }
 
-const mapStateToProps = state => ({ 
+const mapStateToProps = state => ({
     ingredients: state.ingredients,
     totalPrice: state.totalPrice
 })
